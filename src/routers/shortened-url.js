@@ -4,7 +4,7 @@ const short = require('short-uuid');
 const validator = require('validator');
 const Url = require('../models/urlmodel');
 
-const baseUrl = 'http:localhost:5000';
+const configDomain = 'http:localhost:5000';
 
 router.post('/links', async (req, res) => {
   let objectUrl = new Url(req.body);
@@ -12,7 +12,7 @@ router.post('/links', async (req, res) => {
 
   try {
     const urlHash = short.generate();
-    const shortUrl = baseUrl + '/' + urlHash;
+    const shortUrl = configDomain + '/' + urlHash;
     const generatedUrl = new Url({
       url: url,
       urlHash: urlHash,

@@ -9,7 +9,7 @@ router.get('/:urlHash', async (req, res) => {
     });
     res.status(302).send(`Location: ${url.url}`);
   } catch (error) {
-    res.status(500).send('Server error');
+    res.status(400).send('Url not found');
   }
 });
 
