@@ -25,4 +25,20 @@ router.post('/links', async (req, res) => {
   }
 });
 
+router.delete('/:urlHash', async (req, res) => {
+  try {
+    const url = await Url.findOneAndDelete({
+      urlHash: req.params.urlHash,
+    });
+
+    if (url) {
+      return res.send('Url deleted');
+    } else {
+      return res.status(404).send('Url not found.');
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;
