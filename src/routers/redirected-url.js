@@ -11,6 +11,7 @@ router.get('/:urlHash', async (req, res) => {
       if (enteredUrl.url === url.url) {
         enteredUrl.clicks++;
         enteredUrl.save();
+        res.set('Content-Type', 'application/json');
         res
           .status(302)
           .send(

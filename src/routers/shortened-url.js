@@ -16,6 +16,7 @@ router.post('/links', async (req, res) => {
       shortUrl: shortUrl,
     });
     await generatedUrl.save();
+    res.set('Content-Type', 'application/json');
     res.status(200).send(generatedUrl);
   } catch (error) {
     res.status(400).send(error);
@@ -25,6 +26,7 @@ router.post('/links', async (req, res) => {
 router.get('/links', async (req, res) => {
   Url.find({})
     .then((urls) => {
+      res.set('Content-Type', 'application/json');
       res.send(urls);
     })
     .catch((error) => {
@@ -44,6 +46,7 @@ router.patch('/:urlHash', async (req, res) => {
         url[update] = req.body[update];
       });
       await url.save();
+      res.set('Content-Type', 'application/json');
       res.send(url);
     }
   } catch (error) {
@@ -58,6 +61,7 @@ router.delete('/:urlHash', async (req, res) => {
     });
 
     if (url) {
+      res.set('Content-Type', 'application/json');
       return res.status(200).send('Url deleted');
     } else {
       return res.status(404).send('Url not found.');
