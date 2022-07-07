@@ -7,14 +7,11 @@ const Url = require('../models/urlmodel');
 const configDomain = 'http:localhost:5000';
 
 router.post('/links', async (req, res) => {
-  let objectUrl = new Url(req.body);
-  const url = JSON.stringify(objectUrl);
-
   try {
     const urlHash = short.generate();
     const shortUrl = configDomain + '/' + urlHash;
     const generatedUrl = new Url({
-      url: url,
+      url: req.body.url,
       urlHash: urlHash,
       shortUrl: shortUrl,
     });
@@ -25,6 +22,35 @@ router.post('/links', async (req, res) => {
   }
 });
 
+router.get('/links', async (req, res) => {
+  Url.find({})
+    .then((urls) => {
+      res.send(urls);
+    })
+    .catch((error) => {
+      res.send(error);
+    });
+});
+
+router.patch('/:urlHash', async (req, res) => {
+  const objectArray = Object.keys(req.body);
+  try {
+    const url = await Url.findOne({
+      urlHash: req.params.urlHash,
+    });
+
+    if (url) {
+      objectArray.forEach((update) => {
+        url[update] = req.body[update];
+      });
+      await url.save();
+      res.send(url);
+    }
+  } catch (error) {
+    res.status(404).send(error);
+  }
+});
+
 router.delete('/:urlHash', async (req, res) => {
   try {
     const url = await Url.findOneAndDelete({
@@ -32,7 +58,7 @@ router.delete('/:urlHash', async (req, res) => {
     });
 
     if (url) {
-      return res.send('Url deleted');
+      return res.status(200).send('Url deleted');
     } else {
       return res.status(404).send('Url not found.');
     }

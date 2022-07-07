@@ -11,6 +11,10 @@ const urlSchema = new mongoose.Schema({
   shortUrl: {
     type: String,
   },
+  clicks: {
+    type: Number,
+    default: 1,
+  },
 });
 
 urlSchema.methods.toJSON = function () {
@@ -19,6 +23,7 @@ urlSchema.methods.toJSON = function () {
 
   delete urlObject._id;
   delete urlObject.__v;
+  delete urlObject.clicks;
 
   return urlObject;
 };
