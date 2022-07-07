@@ -3,13 +3,23 @@ const router = express.Router();
 const Url = require('../models/urlmodel');
 
 router.get('/:urlHash', async (req, res) => {
+  const storedUrlsArray = await Url.find({});
+  const enteredUrl = await Url.findOne({ urlHash: req.params.urlHash });
+
   try {
-    const url = await Url.findOne({
-      urlHash: req.params.urlHash,
+    storedUrlsArray.forEach((url) => {
+      if (enteredUrl.url === url.url) {
+        enteredUrl.clicks++;
+        enteredUrl.save();
+        res
+          .status(302)
+          .send(
+            `Location: ${enteredUrl.url}\n Number of clicks: ${enteredUrl.clicks}`
+          );
+      }
     });
-    res.status(302).send(`Location: ${url.url}`);
   } catch (error) {
-    res.status(400).send('Url not found');
+    res.status(404).send(error);
   }
 });
 
