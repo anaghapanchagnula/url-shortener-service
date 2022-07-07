@@ -11,13 +11,8 @@ router.get('/:urlHash', async (req, res) => {
   );
 
   try {
-    await enteredUrl.save();
     res.set('Content-Type', 'application/json');
-    res
-      .status(302)
-      .send(
-        `Location: ${enteredUrl.url}\n Number of clicks: ${enteredUrl.clicks}`
-      );
+    res.redirect(302, enteredUrl.url);
   } catch (error) {
     res.status(404).send(error);
   }
